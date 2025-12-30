@@ -1,0 +1,361 @@
+import React, { useState } from "react";
+import { Button } from "../components/Button";
+
+export const WaitingList: React.FC = () => {
+  const [formData, setFormData] = useState({
+    parentName: "",
+    email: "",
+    phone: "",
+    childName: "",
+    childAge: "",
+    ageBand: "",
+    message: "",
+  });
+
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [touched, setTouched] = useState<Record<string, boolean>>({});
+
+  const validateField = (name: string, value: string): string => {
+    switch (name) {
+      case "parentName":
+      case "childName":
+        if (!value || value.trim().length < 2) {
+          return "Name must be at least 2 characters";
+        }
+        if (!/^[a-zA-Z\s'-]+$/.test(value)) {
+          return "Name can only contain letters, spaces, hyphens, and apostrophes";
+        }
+        break;
+
+      case "email":
+        if (!value) {
+          return "Email is required";
+        }
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+          return "Please enter a valid email address";
+        }
+        break;
+
+      case "phone":
+        if (!value) {
+          return "Phone number is required";
+        }
+        if (
+          !/^[\d\s\+\-\(\)]+$/.test(value) ||
+          value.replace(/\D/g, "").length < 10
+        ) {
+          return "Please enter a valid phone number (at least 10 digits)";
+        }
+        break;
+
+      case "childAge":
+        const age = parseInt(value);
+        if (!value || isNaN(age)) {
+          return "Child's age is required";
+        }
+        if (age < 6 || age > 16) {
+          return "Age must be between 6 and 16";
+        }
+        break;
+
+      case "ageBand":
+        if (!value) {
+          return "Please select an age band";
+        }
+        break;
+
+      default:
+        break;
+    }
+    return "";
+  };
+
+  const handleChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
+  ) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+
+    // Clear error when user starts typing
+    if (touched[name]) {
+      const error = validateField(name, value);
+      setErrors((prev) => ({ ...prev, [name]: error }));
+    }
+  };
+
+  const handleBlur = (
+    e: React.FocusEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
+  ) => {
+    const { name, value } = e.target;
+    setTouched((prev) => ({ ...prev, [name]: true }));
+    const error = validateField(name, value);
+    setErrors((prev) => ({ ...prev, [name]: error }));
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    // Validate all required fields
+    const newErrors: Record<string, string> = {};
+    const requiredFields = [
+      "parentName",
+      "email",
+      "phone",
+      "childName",
+      "childAge",
+      "ageBand",
+    ];
+
+    requiredFields.forEach((field) => {
+      const value = formData[field as keyof typeof formData];
+      const error = validateField(field, value);
+      if (error) {
+        newErrors[field] = error;
+      }
+    });
+
+    // Mark all required fields as touched
+    const allTouched = requiredFields.reduce(
+      (acc, field) => ({
+        ...acc,
+        [field]: true,
+      }),
+      {}
+    );
+    setTouched(allTouched);
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      // Scroll to first error
+      const firstErrorField = Object.keys(newErrors)[0];
+      const element = document.getElementsByName(firstErrorField)[0];
+      if (element) {
+        element.scrollIntoView({ behavior: "smooth", block: "center" });
+        element.focus();
+      }
+      return;
+    }
+
+    console.log("Waiting list submission:", formData);
+    alert(
+      "Thank you for joining our waiting list. You will receive priority consideration for the next intake."
+    );
+  };
+
+  return (
+    <div className="min-h-screen bg-linear-to-br from-slate-50 to-amber-50 flex items-center justify-center py-12 sm:py-16 md:py-20">
+      <div className="max-w-3xl mx-auto px-4 sm:px-6">
+        <div className="bg-white rounded-lg shadow-lg p-6 sm:p-8 md:p-12">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-serif font-bold text-slate-900 mb-4 sm:mb-6 text-center">
+            The Mastery House
+            <br />
+            Waiting List
+          </h1>
+
+          <div className="mb-6 sm:mb-8 text-center">
+            <p className="text-base sm:text-lg text-slate-700 mb-3 sm:mb-4">
+              Thank you for your interest.
+            </p>
+            <p className="text-sm sm:text-base text-slate-600">
+              Our current intake is either under final review or at capacity for
+              this year.
+            </p>
+          </div>
+
+          <div className="bg-amber-50 border-l-4 border-amber-600 p-4 sm:p-6 mb-6 sm:mb-8">
+            <h2 className="font-bold text-slate-900 mb-3 text-base sm:text-lg">
+              Families on the waiting list:
+            </h2>
+            <ul className="space-y-2 text-sm sm:text-base text-slate-700">
+              <li className="flex items-start gap-2">
+                <span className="text-amber-600">✓</span>
+                <span>Receive priority consideration for the next intake</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-amber-600">✓</span>
+                <span>Are notified if a place becomes available</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-amber-600">✓</span>
+                <span>Are invited to private information sessions</span>
+              </li>
+            </ul>
+          </div>
+
+          <form onSubmit={handleSubmit} className="space-y-6" noValidate>
+            <div>
+              <label className="block text-sm font-medium text-slate-700 mb-2">
+                Parent/Guardian Full Name *
+              </label>
+              <input
+                type="text"
+                name="parentName"
+                value={formData.parentName}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                className={`w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 ${
+                  errors.parentName && touched.parentName
+                    ? "border-red-500 focus:ring-red-600"
+                    : "border-slate-300 focus:ring-amber-600"
+                }`}
+              />
+              {errors.parentName && touched.parentName && (
+                <p className="mt-1 text-sm text-red-600">{errors.parentName}</p>
+              )}
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-slate-700 mb-2">
+                Email Address *
+              </label>
+              <input
+                type="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                className={`w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 ${
+                  errors.email && touched.email
+                    ? "border-red-500 focus:ring-red-600"
+                    : "border-slate-300 focus:ring-amber-600"
+                }`}
+              />
+              {errors.email && touched.email && (
+                <p className="mt-1 text-sm text-red-600">{errors.email}</p>
+              )}
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-slate-700 mb-2">
+                Phone Number *
+              </label>
+              <input
+                type="tel"
+                name="phone"
+                value={formData.phone}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                placeholder="+234 123 456 7890"
+                className={`w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 ${
+                  errors.phone && touched.phone
+                    ? "border-red-500 focus:ring-red-600"
+                    : "border-slate-300 focus:ring-amber-600"
+                }`}
+              />
+              {errors.phone && touched.phone && (
+                <p className="mt-1 text-sm text-red-600">{errors.phone}</p>
+              )}
+            </div>
+
+            <div className="grid md:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-slate-700 mb-2">
+                  Child's Name *
+                </label>
+                <input
+                  type="text"
+                  name="childName"
+                  value={formData.childName}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  className={`w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 ${
+                    errors.childName && touched.childName
+                      ? "border-red-500 focus:ring-red-600"
+                      : "border-slate-300 focus:ring-amber-600"
+                  }`}
+                />
+                {errors.childName && touched.childName && (
+                  <p className="mt-1 text-sm text-red-600">
+                    {errors.childName}
+                  </p>
+                )}
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-slate-700 mb-2">
+                  Child's Age *
+                </label>
+                <input
+                  type="number"
+                  name="childAge"
+                  value={formData.childAge}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  min="6"
+                  max="16"
+                  className={`w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 ${
+                    errors.childAge && touched.childAge
+                      ? "border-red-500 focus:ring-red-600"
+                      : "border-slate-300 focus:ring-amber-600"
+                  }`}
+                />
+                {errors.childAge && touched.childAge && (
+                  <p className="mt-1 text-sm text-red-600">{errors.childAge}</p>
+                )}
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-slate-700 mb-2">
+                Age Band of Interest *
+              </label>
+              <select
+                name="ageBand"
+                value={formData.ageBand}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                className={`w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 ${
+                  errors.ageBand && touched.ageBand
+                    ? "border-red-500 focus:ring-red-600"
+                    : "border-slate-300 focus:ring-amber-600"
+                }`}
+              >
+                <option value="">Select an option</option>
+                <option value="6-8">Foundations (6–8)</option>
+                <option value="9-12">Skill Builders (9–12)</option>
+                <option value="13-16">Mastery (13–16)</option>
+              </select>
+              {errors.ageBand && touched.ageBand && (
+                <p className="mt-1 text-sm text-red-600">{errors.ageBand}</p>
+              )}
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-slate-700 mb-2">
+                Additional Message (Optional)
+              </label>
+              <textarea
+                name="message"
+                value={formData.message}
+                onChange={handleChange}
+                rows={4}
+                className="w-full px-4 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-600"
+                placeholder="Any additional information you'd like to share..."
+              />
+            </div>
+
+            <Button type="submit" size="lg" className="w-full">
+              Join the Waiting List
+            </Button>
+          </form>
+
+          <div className="mt-8 text-center">
+            <a
+              href="/"
+              className="text-amber-700 hover:text-amber-800 underline"
+            >
+              Return to Home
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};

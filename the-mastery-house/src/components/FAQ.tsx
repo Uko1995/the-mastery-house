@@ -1,0 +1,83 @@
+import React, { useState } from "react";
+import { Section } from "./Section";
+
+export const FAQ: React.FC = () => {
+  const [openIndex, setOpenIndex] = useState<number | null>(null);
+
+  const faqs = [
+    {
+      question: "Can my child join mid-year?",
+      answer: "No. We operate one intake annually to protect cohort depth.",
+    },
+    {
+      question: "Is this a replacement school?",
+      answer:
+        "No. We function as a high-level academic and formation supplement.",
+    },
+    {
+      question: "What if my child struggles?",
+      answer: "Personalised mentorship ensures no child is invisible.",
+    },
+    {
+      question: "How involved are parents?",
+      answer: "Very. Formation works best when the home is aligned.",
+    },
+    {
+      question: "What kind of children thrive here?",
+      answer:
+        "Children who are curious, thoughtful, capable, willing to be challenged with care, and ready to grow in discipline and responsibility. This is not a remedial programme—it is a formation environment for children with potential.",
+    },
+    {
+      question: "Who are the mentors?",
+      answer:
+        "Mentors are carefully selected and trained adults who understand child development deeply, model discipline and emotional intelligence, are aligned with our values, and commit to long-term mentorship.",
+    },
+    {
+      question: "Is the Christian foundation compulsory?",
+      answer:
+        "The Mastery House is Christian in foundation, not performative in expression. We do not require children to recite verses, but biblical principles shape character formation. Parents should be comfortable with excellence pursued with humility and discipline.",
+    },
+    {
+      question: "What is the enrollment process?",
+      answer:
+        "Our enrollment process is intentionally selective: Complete the Intention Form, attend a private virtual meeting with the Founder, and if aligned, payment is made and onboarding details are shared. Not every family who applies is invited to join.",
+    },
+  ];
+
+  return (
+    <Section background="white" id="faq">
+      <div className="max-w-3xl mx-auto px-4">
+        <h2 className="text-3xl sm:text-4xl md:text-5xl font-serif font-bold text-slate-900 mb-8 sm:mb-12 text-center">
+          Frequently Asked Questions
+        </h2>
+
+        <p className="text-lg sm:text-xl text-center mb-8 sm:mb-12 text-slate-700">
+          Risk reduction
+        </p>
+
+        <div className="space-y-4">
+          {faqs.map((faq, index) => (
+            <div key={index} className="border-b border-slate-200">
+              <button
+                onClick={() => setOpenIndex(openIndex === index ? null : index)}
+                className="w-full py-3 sm:py-4 flex justify-between items-center text-left hover:text-amber-700 transition-colors"
+              >
+                <span className="text-base sm:text-lg font-semibold text-slate-900 pr-4">
+                  {faq.question}
+                </span>
+                <span className="text-2xl text-amber-700">
+                  {openIndex === index ? "−" : "+"}
+                </span>
+              </button>
+              {openIndex === index && (
+                <div className="pb-3 sm:pb-4 text-sm sm:text-base text-slate-700 leading-relaxed">
+                  {faq.answer}
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
+    </Section>
+  );
+};
