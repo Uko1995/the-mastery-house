@@ -1,4 +1,5 @@
 import React from "react";
+import { motion } from "framer-motion";
 
 interface ButtonProps {
   children: React.ReactNode;
@@ -39,17 +40,18 @@ export const Button: React.FC<ButtonProps> = ({
 
   const classes = `${baseClasses} ${variantClasses[variant]} ${sizeClasses[size]} ${className}`;
 
-  if (href) {
-    return (
-      <a href={href} className={classes}>
-        {children}
-      </a>
-    );
-  }
+  const MotionComponent = href ? motion.a : motion.button;
+  const props = href ? { href } : { type, onClick };
 
   return (
-    <button type={type} onClick={onClick} className={classes}>
+    <MotionComponent
+      className={classes}
+      whileHover={{ scale: 1.05 }}
+      whileTap={{ scale: 0.95 }}
+      transition={{ type: "spring", stiffness: 400, damping: 17 }}
+      {...props}
+    >
       {children}
-    </button>
+    </MotionComponent>
   );
 };

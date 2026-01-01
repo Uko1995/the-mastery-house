@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "./Button";
 
 export const Navigation: React.FC = () => {
@@ -19,7 +20,10 @@ export const Navigation: React.FC = () => {
   };
 
   return (
-    <nav
+    <motion.nav
+      initial={{ y: -100 }}
+      animate={{ y: 0 }}
+      transition={{ duration: 0.5, ease: "easeOut" }}
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         isScrolled ? "bg-white shadow-md py-2" : "bg-transparent "
       }`}
@@ -105,51 +109,59 @@ export const Navigation: React.FC = () => {
         </div>
 
         {/* Mobile Menu */}
-        {isMobileMenuOpen && (
-          <div className="lg:hidden mt-4 pb-4 space-y-3">
-            <a
-              href="/"
-              onClick={closeMobileMenu}
-              className="block py-2 text-slate-700 hover:text-slate-900 transition-colors font-medium"
+        <AnimatePresence>
+          {isMobileMenuOpen && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.3 }}
+              className="lg:hidden mt-4 pb-4 space-y-3 bg-white rounded-lg shadow-lg px-4"
             >
-              Home
-            </a>
-            <a
-              href="#promise"
-              onClick={closeMobileMenu}
-              className="block py-2 text-slate-700 hover:text-slate-900 transition-colors font-medium"
-            >
-              About
-            </a>
-            <a
-              href="#curriculum"
-              onClick={closeMobileMenu}
-              className="block py-2 text-slate-700 hover:text-slate-900 transition-colors font-medium"
-            >
-              Curriculum
-            </a>
-            <a
-              href="#tuition"
-              onClick={closeMobileMenu}
-              className="block py-2 text-slate-700 hover:text-slate-900 transition-colors font-medium"
-            >
-              Tuition
-            </a>
-            <a
-              href="#faq"
-              onClick={closeMobileMenu}
-              className="block py-2 text-slate-700 hover:text-slate-900 transition-colors font-medium"
-            >
-              FAQ
-            </a>
-            <div className="pt-2">
-              <Button size="sm" href="#enroll" className="w-full">
-                Request Invitation
-              </Button>
-            </div>
-          </div>
-        )}
+              <a
+                href="/"
+                onClick={closeMobileMenu}
+                className="block py-2 text-slate-700 hover:text-slate-900 transition-colors font-medium"
+              >
+                Home
+              </a>
+              <a
+                href="#promise"
+                onClick={closeMobileMenu}
+                className="block py-2 text-slate-700 hover:text-slate-900 transition-colors font-medium"
+              >
+                About
+              </a>
+              <a
+                href="#curriculum"
+                onClick={closeMobileMenu}
+                className="block py-2 text-slate-700 hover:text-slate-900 transition-colors font-medium"
+              >
+                Curriculum
+              </a>
+              <a
+                href="#tuition"
+                onClick={closeMobileMenu}
+                className="block py-2 text-slate-700 hover:text-slate-900 transition-colors font-medium"
+              >
+                Tuition
+              </a>
+              <a
+                href="#faq"
+                onClick={closeMobileMenu}
+                className="block py-2 text-slate-700 hover:text-slate-900 transition-colors font-medium"
+              >
+                FAQ
+              </a>
+              <div className="pt-2">
+                <Button size="sm" href="#enroll" className="w-full">
+                  Request Invitation
+                </Button>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
-    </nav>
+    </motion.nav>
   );
 };

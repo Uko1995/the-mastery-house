@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { Section } from "./Section";
 
 export const FAQ: React.FC = () => {
@@ -53,7 +54,14 @@ export const FAQ: React.FC = () => {
 
         <div className="space-y-4">
           {faqs.map((faq, index) => (
-            <div key={index} className="border-b border-slate-200">
+            <motion.div
+              key={index}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: index * 0.1 }}
+              className="border-b border-slate-200"
+            >
               <button
                 onClick={() => setOpenIndex(openIndex === index ? null : index)}
                 className="w-full py-3 sm:py-4 flex justify-between items-center text-left hover:text-[#b59a5b] transition-colors"
@@ -61,16 +69,30 @@ export const FAQ: React.FC = () => {
                 <span className="text-base sm:text-lg font-semibold text-[#1f3d2b] pr-4">
                   {faq.question}
                 </span>
-                <span className="text-2xl text-[#b59a5b]">
+                <motion.span
+                  className="text-2xl text-[#b59a5b]"
+                  animate={{ rotate: openIndex === index ? 180 : 0 }}
+                  transition={{ duration: 0.3 }}
+                >
                   {openIndex === index ? "−" : "+"}
-                </span>
+                </motion.span>
               </button>
-              {openIndex === index && (
-                <div className="pb-3 sm:pb-4 text-sm sm:text-base text-slate-700 leading-relaxed">
-                  {faq.answer}
-                </div>
-              )}
-            </div>
+              <AnimatePresence>
+                {openIndex === index && (
+                  <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: "auto" }}
+                    exit={{ opacity: 0, height: 0 }}
+                    transition={{ duration: 0.3 }}
+                    className="overflow-hidden"
+                  >
+                    <div className="pb-3 sm:pb-4 text-sm sm:text-base text-slate-700 leading-relaxed">
+                      {faq.answer}
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </motion.div>
           ))}
         </div>
       </div>
