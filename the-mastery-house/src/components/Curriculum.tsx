@@ -4,18 +4,14 @@ import { Section } from "./Section";
 export const Curriculum: React.FC = () => {
   return (
     <Section background="white" id="curriculum">
-      <div className="max-w-4xl mx-auto px-4">
-        <h2 className="text-3xl sm:text-4xl md:text-5xl font-serif font-bold text-slate-900 mb-8 sm:mb-12 text-center">
+      <div className="max-w-5xl  mx-auto px-4">
+        <h2 className="text-3xl sm:text-4xl md:text-5xl font-serif font-bold text-[#1f3d2b] mb-8 sm:mb-12 text-center">
           The Curriculum Strands
         </h2>
 
-        <p className="text-lg sm:text-xl text-center mb-8 sm:mb-12 text-slate-700">
-          Clarity without overwhelm
-        </p>
-
         <div className="space-y-6 sm:space-y-8">
-          <div className="border-l-4 border-amber-600 pl-4 sm:pl-8 py-3 sm:py-4">
-            <h3 className="text-xl sm:text-2xl font-bold text-slate-900 mb-2 sm:mb-3">
+          <div className="border-l-4 border-[#b59a5b] pl-4 sm:pl-8 py-3 sm:py-4">
+            <h3 className="text-xl sm:text-2xl font-bold text-[#1f3d2b] mb-2 sm:mb-3">
               Academic Mastery
             </h3>
             <p className="text-slate-700 mb-3">
@@ -27,8 +23,8 @@ export const Curriculum: React.FC = () => {
             </p>
           </div>
 
-          <div className="border-l-4 border-amber-600 pl-8 py-4">
-            <h3 className="text-2xl font-bold text-slate-900 mb-3">
+          <div className="border-l-4 border-[#b59a5b] pl-8 py-4">
+            <h3 className="text-2xl font-bold text-[#1f3d2b] mb-3">
               Life Skills & Leadership
             </h3>
             <p className="text-slate-700">
@@ -37,8 +33,8 @@ export const Curriculum: React.FC = () => {
             </p>
           </div>
 
-          <div className="border-l-4 border-amber-600 pl-8 py-4">
-            <h3 className="text-2xl font-bold text-slate-900 mb-3">
+          <div className="border-l-4 border-[#b59a5b] pl-8 py-4">
+            <h3 className="text-2xl font-bold text-[#1f3d2b] mb-3">
               Technical Skills & Projects
             </h3>
             <p className="text-slate-700">
@@ -48,10 +44,8 @@ export const Curriculum: React.FC = () => {
           </div>
         </div>
 
-        <p className="text-xl text-center text-slate-900 mt-12 font-medium">
-          Each strand reinforces the other.
-          <br />
-          Nothing exists in isolation.
+        <p className="text-xl text-center text-[#1f3d2b] mt-12 font-medium italic">
+          Each strand reinforces the other. Nothing exists in isolation.
         </p>
       </div>
     </Section>

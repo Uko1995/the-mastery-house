@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Button } from "../components/Button";
+import { isValidPhoneNumber } from "libphonenumber-js";
 
 export const EnrollForm: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -53,11 +54,12 @@ export const EnrollForm: React.FC = () => {
         if (!value || typeof value !== "string") {
           return "Phone number is required";
         }
-        if (
-          !/^[\d\s\+\-\(\)]+$/.test(value) ||
-          value.replace(/\D/g, "").length < 10
-        ) {
-          return "Please enter a valid phone number (at least 10 digits)";
+        try {
+          if (!isValidPhoneNumber(value)) {
+            return "Please enter a valid phone number";
+          }
+        } catch {
+          return "Please enter a valid phone number with country code (e.g., +234)";
         }
         break;
 
@@ -68,8 +70,9 @@ export const EnrollForm: React.FC = () => {
         }
         break;
 
-      case "childAge":
-        const age = typeof value === "string" ? parseInt(value) : 0;
+      case "childAge": {
+        if (typeof value !== "string") return "";
+        const age = parseInt(value);
         if (!value || isNaN(age)) {
           return "Child's age is required";
         }
@@ -77,6 +80,7 @@ export const EnrollForm: React.FC = () => {
           return "Age must be between 6 and 16";
         }
         break;
+      }
 
       case "promptInterest":
       case "childTemperament":
@@ -228,23 +232,23 @@ export const EnrollForm: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-slate-50">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 py-12 sm:py-16 md:py-20">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 py-12 sm:py-16 md:py-20">
         <div className="mb-8 sm:mb-12 text-center">
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-serif font-bold text-slate-900 mb-3 sm:mb-4 px-4">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-serif font-bold text-[#1f3d2b] mb-3 sm:mb-4 px-4">
             Intention to Enroll
           </h1>
-          <p className="text-base sm:text-lg text-slate-600 max-w-2xl mx-auto px-4">
+          <p className="text-base sm:text-lg text-slate-600 max-w-4xl mx-auto px-4">
             This intention form is not an application—it is an expression of
             interest and alignment. Only families who appear to be a strong fit
             will be invited to a private virtual conversation with the Founder.
           </p>
         </div>
 
-        <div className="bg-amber-50 border-l-4 border-amber-600 p-4 sm:p-6 mb-6 sm:mb-8">
-          <h2 className="font-bold text-slate-900 mb-2 text-base sm:text-lg">
+        <div className="bg-[#EFE6D8] p-4 sm:p-6 mb-6 sm:mb-8">
+          <h2 className="font-bold text-[#1f3d2b] mb-2 text-base sm:text-lg">
             Before You Proceed
           </h2>
-          <p className="text-xs sm:text-sm text-slate-700">
+          <p className="text-sm sm:text-sm text-slate-700">
             The Mastery House operates as a Mentorship & Mastery Academy, not a
             conventional online school. By continuing, you acknowledge that
             enrollment is by alignment and invitation, the program emphasizes
@@ -278,7 +282,7 @@ export const EnrollForm: React.FC = () => {
                   className={`w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 ${
                     errors.parentName && touched.parentName
                       ? "border-red-500 focus:ring-red-600"
-                      : "border-slate-300 focus:ring-amber-600"
+                      : "border-slate-300 focus:ring-[#b59a5b]"
                   }`}
                 />
                 {errors.parentName && touched.parentName && (
@@ -301,7 +305,7 @@ export const EnrollForm: React.FC = () => {
                   className={`w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 ${
                     errors.email && touched.email
                       ? "border-red-500 focus:ring-red-600"
-                      : "border-slate-300 focus:ring-amber-600"
+                      : "border-slate-300 focus:ring-[#b59a5b]"
                   }`}
                 />
                 {errors.email && touched.email && (
@@ -323,7 +327,7 @@ export const EnrollForm: React.FC = () => {
                   className={`w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 ${
                     errors.phone && touched.phone
                       ? "border-red-500 focus:ring-red-600"
-                      : "border-slate-300 focus:ring-amber-600"
+                      : "border-slate-300 focus:ring-[#b59a5b]"
                   }`}
                 />
                 {errors.phone && touched.phone && (
@@ -345,7 +349,7 @@ export const EnrollForm: React.FC = () => {
                     className={`w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 ${
                       errors.country && touched.country
                         ? "border-red-500 focus:ring-red-600"
-                        : "border-slate-300 focus:ring-amber-600"
+                        : "border-slate-300 focus:ring-[#b59a5b]"
                     }`}
                   />
                   {errors.country && touched.country && (
@@ -369,7 +373,7 @@ export const EnrollForm: React.FC = () => {
                     className={`w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 ${
                       errors.timezone && touched.timezone
                         ? "border-red-500 focus:ring-red-600"
-                        : "border-slate-300 focus:ring-amber-600"
+                        : "border-slate-300 focus:ring-[#b59a5b]"
                     }`}
                   />
                   {errors.timezone && touched.timezone && (
@@ -392,7 +396,7 @@ export const EnrollForm: React.FC = () => {
                   className={`w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 ${
                     errors.howHeard && touched.howHeard
                       ? "border-red-500 focus:ring-red-600"
-                      : "border-slate-300 focus:ring-amber-600"
+                      : "border-slate-300 focus:ring-[#b59a5b]"
                   }`}
                 >
                   <option value="">Select an option</option>
@@ -414,7 +418,7 @@ export const EnrollForm: React.FC = () => {
                     name="howHeardOther"
                     value={formData.howHeardOther}
                     onChange={handleChange}
-                    className="w-full px-4 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-600"
+                    className="w-full px-4 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#b59a5b]"
                   />
                 </div>
               )}
@@ -438,7 +442,7 @@ export const EnrollForm: React.FC = () => {
                   value={formData.childName}
                   onChange={handleChange}
                   required
-                  className="w-full px-4 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-600"
+                  className="w-full px-4 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#b59a5b]"
                 />
               </div>
 
@@ -454,7 +458,7 @@ export const EnrollForm: React.FC = () => {
                   required
                   min="6"
                   max="16"
-                  className="w-full px-4 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-600"
+                  className="w-full px-4 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#b59a5b]"
                 />
               </div>
 
@@ -467,7 +471,7 @@ export const EnrollForm: React.FC = () => {
                   value={formData.schoolingStructure}
                   onChange={handleChange}
                   required
-                  className="w-full px-4 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-600"
+                  className="w-full px-4 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#b59a5b]"
                 >
                   <option value="">Select an option</option>
                   <option value="british">British</option>
@@ -489,7 +493,7 @@ export const EnrollForm: React.FC = () => {
                   value={formData.ageBand}
                   onChange={handleChange}
                   required
-                  className="w-full px-4 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-600"
+                  className="w-full px-4 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#b59a5b]"
                 >
                   <option value="">Select an option</option>
                   <option value="6-8">Foundations (6–8)</option>
@@ -518,7 +522,7 @@ export const EnrollForm: React.FC = () => {
                   onChange={handleChange}
                   required
                   rows={4}
-                  className="w-full px-4 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-600"
+                  className="w-full px-4 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#b59a5b]"
                   placeholder="Share your reflections..."
                 />
               </div>
@@ -568,7 +572,7 @@ export const EnrollForm: React.FC = () => {
                   onChange={handleChange}
                   required
                   rows={3}
-                  className="w-full px-4 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-600"
+                  className="w-full px-4 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#b59a5b]"
                   placeholder="e.g., Calm, curious, intense, sensitive, driven..."
                 />
               </div>
@@ -583,7 +587,7 @@ export const EnrollForm: React.FC = () => {
                   onChange={handleChange}
                   required
                   rows={4}
-                  className="w-full px-4 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-600"
+                  className="w-full px-4 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#b59a5b]"
                   placeholder="This helps us understand long-term alignment..."
                 />
               </div>
@@ -607,7 +611,7 @@ export const EnrollForm: React.FC = () => {
                   value={formData.parentInvolvement}
                   onChange={handleChange}
                   required
-                  className="w-full px-4 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-600"
+                  className="w-full px-4 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#b59a5b]"
                 >
                   <option value="">Select an option</option>
                   <option value="highly">Highly involved</option>
@@ -626,7 +630,7 @@ export const EnrollForm: React.FC = () => {
                   value={formData.structuredEnvironment}
                   onChange={handleChange}
                   required
-                  className="w-full px-4 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-600"
+                  className="w-full px-4 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#b59a5b]"
                 >
                   <option value="">Select an option</option>
                   <option value="yes">Yes</option>
@@ -645,7 +649,7 @@ export const EnrollForm: React.FC = () => {
                   value={formData.faithValues}
                   onChange={handleChange}
                   required
-                  className="w-full px-4 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-600"
+                  className="w-full px-4 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#b59a5b]"
                 >
                   <option value="">Select an option</option>
                   <option value="yes">Yes</option>
@@ -673,7 +677,7 @@ export const EnrollForm: React.FC = () => {
                   value={formData.investmentReady}
                   onChange={handleChange}
                   required
-                  className="w-full px-4 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-600"
+                  className="w-full px-4 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#b59a5b]"
                 >
                   <option value="">Select an option</option>
                   <option value="yes">Yes</option>
@@ -694,7 +698,7 @@ export const EnrollForm: React.FC = () => {
                   value={formData.additionalInfo}
                   onChange={handleChange}
                   rows={4}
-                  className="w-full px-4 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-600"
+                  className="w-full px-4 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#b59a5b]"
                   placeholder="Optional"
                 />
               </div>

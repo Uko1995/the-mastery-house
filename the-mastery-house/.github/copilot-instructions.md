@@ -36,6 +36,7 @@ Three routes defined in `App.tsx`:
 ### Color Palette (Brand Colors)
 
 - Primary CTA: `#b59a5b` (gold/brass tone)
+- Darker gold/brass: `#8b650a`
 - Hover state: `#9a8643`
 - Dark text: `#1f3d2b` (deep green) for main headings
 - Backgrounds: #EFE6D8 (cream), #f8f4ef (off-white), #1a1a1a (dark)

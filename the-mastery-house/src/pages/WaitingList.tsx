@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Button } from "../components/Button";
+import { isValidPhoneNumber } from "libphonenumber-js";
 
 export const WaitingList: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -37,18 +38,19 @@ export const WaitingList: React.FC = () => {
         break;
 
       case "phone":
-        if (!value) {
+        if (!value || typeof value !== "string") {
           return "Phone number is required";
         }
-        if (
-          !/^[\d\s\+\-\(\)]+$/.test(value) ||
-          value.replace(/\D/g, "").length < 10
-        ) {
-          return "Please enter a valid phone number (at least 10 digits)";
+        try {
+          if (!isValidPhoneNumber(value)) {
+            return "Please enter a valid phone number";
+          }
+        } catch {
+          return "Please enter a valid phone number with country code (e.g., +234)";
         }
         break;
 
-      case "childAge":
+      case "childAge": {
         const age = parseInt(value);
         if (!value || isNaN(age)) {
           return "Child's age is required";
@@ -57,6 +59,7 @@ export const WaitingList: React.FC = () => {
           return "Age must be between 6 and 16";
         }
         break;
+      }
 
       case "ageBand":
         if (!value) {
@@ -150,10 +153,10 @@ export const WaitingList: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-linear-to-br from-slate-50 to-amber-50 flex items-center justify-center py-12 sm:py-16 md:py-20">
-      <div className="max-w-3xl mx-auto px-4 sm:px-6">
+    <div className=" min-h-screen bg-linear-to-br from-slate-50 to-amber-50 flex items-center justify-center py-12 sm:py-16 md:py-20">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6">
         <div className="bg-white rounded-lg shadow-lg p-6 sm:p-8 md:p-12">
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-serif font-bold text-slate-900 mb-4 sm:mb-6 text-center">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-serif font-bold text-[#1f3d2b] mb-4 sm:mb-6 text-center">
             The Mastery House
             <br />
             Waiting List
@@ -169,8 +172,8 @@ export const WaitingList: React.FC = () => {
             </p>
           </div>
 
-          <div className="bg-amber-50 border-l-4 border-amber-600 p-4 sm:p-6 mb-6 sm:mb-8">
-            <h2 className="font-bold text-slate-900 mb-3 text-base sm:text-lg">
+          <div className="bg-[#EFE6D8] p-4 sm:p-6 mb-6 sm:mb-8">
+            <h2 className="font-bold text-[#1f3d2b] mb-3 text-base sm:text-lg">
               Families on the waiting list:
             </h2>
             <ul className="space-y-2 text-sm sm:text-base text-slate-700">
@@ -203,7 +206,7 @@ export const WaitingList: React.FC = () => {
                 className={`w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 ${
                   errors.parentName && touched.parentName
                     ? "border-red-500 focus:ring-red-600"
-                    : "border-slate-300 focus:ring-amber-600"
+                    : "border-slate-300 focus:ring-[#b59a5b]"
                 }`}
               />
               {errors.parentName && touched.parentName && (
@@ -224,7 +227,7 @@ export const WaitingList: React.FC = () => {
                 className={`w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 ${
                   errors.email && touched.email
                     ? "border-red-500 focus:ring-red-600"
-                    : "border-slate-300 focus:ring-amber-600"
+                    : "border-slate-300 focus:ring-[#b59a5b]"
                 }`}
               />
               {errors.email && touched.email && (
@@ -246,7 +249,7 @@ export const WaitingList: React.FC = () => {
                 className={`w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 ${
                   errors.phone && touched.phone
                     ? "border-red-500 focus:ring-red-600"
-                    : "border-slate-300 focus:ring-amber-600"
+                    : "border-slate-300 focus:ring-[#b59a5b]"
                 }`}
               />
               {errors.phone && touched.phone && (
@@ -268,7 +271,7 @@ export const WaitingList: React.FC = () => {
                   className={`w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 ${
                     errors.childName && touched.childName
                       ? "border-red-500 focus:ring-red-600"
-                      : "border-slate-300 focus:ring-amber-600"
+                      : "border-slate-300 focus:ring-[#b59a5b]"
                   }`}
                 />
                 {errors.childName && touched.childName && (
@@ -293,7 +296,7 @@ export const WaitingList: React.FC = () => {
                   className={`w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 ${
                     errors.childAge && touched.childAge
                       ? "border-red-500 focus:ring-red-600"
-                      : "border-slate-300 focus:ring-amber-600"
+                      : "border-slate-300 focus:ring-[#b59a5b]"
                   }`}
                 />
                 {errors.childAge && touched.childAge && (
@@ -314,7 +317,7 @@ export const WaitingList: React.FC = () => {
                 className={`w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 ${
                   errors.ageBand && touched.ageBand
                     ? "border-red-500 focus:ring-red-600"
-                    : "border-slate-300 focus:ring-amber-600"
+                    : "border-slate-300 focus:ring-[#b59a5b]"
                 }`}
               >
                 <option value="">Select an option</option>
@@ -336,7 +339,7 @@ export const WaitingList: React.FC = () => {
                 value={formData.message}
                 onChange={handleChange}
                 rows={4}
-                className="w-full px-4 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-600"
+                className="w-full px-4 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#b59a5b]"
                 placeholder="Any additional information you'd like to share..."
               />
             </div>

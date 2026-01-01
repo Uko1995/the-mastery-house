@@ -1,4 +1,5 @@
 import React from "react";
+import Logo from "../../public/TheMastery.png";
 
 export const Footer: React.FC = () => {
   return (
@@ -6,7 +7,12 @@ export const Footer: React.FC = () => {
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
         <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-6 sm:gap-8 mb-6 sm:mb-8">
           <div>
-            <h3 className="text-xl font-serif font-bold text-white mb-4">
+            <img
+              src={Logo}
+              className="object-cover w-3/5 h-40 "
+              alt="The Mastery House Logo"
+            />
+            <h3 className="text-xl font-serif font-bold text-[#b59a5b] mb-4">
               THE MASTERY HOUSE
             </h3>
             <p className="text-sm">Where children are formed for excellence</p>
@@ -16,14 +22,17 @@ export const Footer: React.FC = () => {
             <h4 className="font-bold text-white mb-4">Quick Links</h4>
             <ul className="space-y-2 text-sm">
               <li>
-                <a href="#about" className="hover:text-white transition-colors">
+                <a
+                  href="#about"
+                  className="hover:text-[#b59a5b] transition-colors"
+                >
                   About
                 </a>
               </li>
               <li>
                 <a
                   href="#curriculum"
-                  className="hover:text-white transition-colors"
+                  className="hover:text-[#b59a5b] transition-colors"
                 >
                   Curriculum
                 </a>
@@ -31,13 +40,16 @@ export const Footer: React.FC = () => {
               <li>
                 <a
                   href="#tuition"
-                  className="hover:text-white transition-colors"
+                  className="hover:text-[#b59a5b] transition-colors"
                 >
                   Tuition
                 </a>
               </li>
               <li>
-                <a href="#faq" className="hover:text-white transition-colors">
+                <a
+                  href="#faq"
+                  className="hover:text-[#b59a5b] transition-colors"
+                >
                   FAQ
                 </a>
               </li>
@@ -50,7 +62,7 @@ export const Footer: React.FC = () => {
               <li>
                 <a
                   href="/enroll-form"
-                  className="hover:text-white transition-colors"
+                  className="hover:text-[#b59a5b] transition-colors"
                 >
                   Request Invitation
                 </a>
@@ -58,7 +70,7 @@ export const Footer: React.FC = () => {
               <li>
                 <a
                   href="/waiting-list"
-                  className="hover:text-white transition-colors"
+                  className="hover:text-[#b59a5b] transition-colors"
                 >
                   Join Waiting List
                 </a>

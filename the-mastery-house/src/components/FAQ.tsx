@@ -25,7 +25,7 @@ export const FAQ: React.FC = () => {
     {
       question: "What kind of children thrive here?",
       answer:
-        "Children who are curious, thoughtful, capable, willing to be challenged with care, and ready to grow in discipline and responsibility. This is not a remedial programme—it is a formation environment for children with potential.",
+        "Children who are curious, thoughtful, capable, willing to be challenged with care, and ready to grow in discipline and responsibility. This is not a remedial programme it is a formation environment for children with potential.",
     },
     {
       question: "Who are the mentors?",
@@ -46,26 +46,22 @@ export const FAQ: React.FC = () => {
 
   return (
     <Section background="white" id="faq">
-      <div className="max-w-3xl mx-auto px-4">
-        <h2 className="text-3xl sm:text-4xl md:text-5xl font-serif font-bold text-slate-900 mb-8 sm:mb-12 text-center">
+      <div className="max-w-6xl mx-auto px-4">
+        <h2 className="text-3xl sm:text-4xl md:text-5xl font-serif font-bold text-[#1f3d2b] mb-8 sm:mb-12 text-center">
           Frequently Asked Questions
         </h2>
-
-        <p className="text-lg sm:text-xl text-center mb-8 sm:mb-12 text-slate-700">
-          Risk reduction
-        </p>
 
         <div className="space-y-4">
           {faqs.map((faq, index) => (
             <div key={index} className="border-b border-slate-200">
               <button
                 onClick={() => setOpenIndex(openIndex === index ? null : index)}
-                className="w-full py-3 sm:py-4 flex justify-between items-center text-left hover:text-amber-700 transition-colors"
+                className="w-full py-3 sm:py-4 flex justify-between items-center text-left hover:text-[#b59a5b] transition-colors"
               >
-                <span className="text-base sm:text-lg font-semibold text-slate-900 pr-4">
+                <span className="text-base sm:text-lg font-semibold text-[#1f3d2b] pr-4">
                   {faq.question}
                 </span>
-                <span className="text-2xl text-amber-700">
+                <span className="text-2xl text-[#b59a5b]">
                   {openIndex === index ? "−" : "+"}
                 </span>
               </button>

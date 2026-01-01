@@ -23,7 +23,7 @@ export const Section: React.FC<SectionProps> = ({
   return (
     <section
       id={id}
-      className={`py-20 ${backgroundClasses[background]} ${className}`}
+      className={`py-20 scroll-mt-24 ${backgroundClasses[background]} ${className}`}
     >
       <div className="max-w-6xl mx-auto px-6">{children}</div>
     </section>

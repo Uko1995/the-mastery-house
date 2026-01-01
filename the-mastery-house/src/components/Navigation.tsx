@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import TheMastery from "../../public/TheMastery.png";
 import { Button } from "./Button";
 
 export const Navigation: React.FC = () => {
@@ -22,14 +21,14 @@ export const Navigation: React.FC = () => {
   return (
     <nav
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled ? "bg-white shadow-md py-2" : "bg-transparent shadow-sm "
+        isScrolled ? "bg-white shadow-md py-2" : "bg-transparent "
       }`}
     >
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
         <div className="flex justify-between items-center">
           <a href="/" className="shrink-0">
             <img
-              src={TheMastery}
+              src="/TheMastery.png"
               alt="The Mastery House"
               className={`w-auto object-contain transition-all duration-300 ${
                 isScrolled ? "h-16 sm:h-20" : "h-20 sm:h-24"
@@ -46,7 +45,7 @@ export const Navigation: React.FC = () => {
               Home
             </a>
             <a
-              href="#about"
+              href="#promise"
               className="text-sm xl:text-base text-slate-700 hover:text-slate-900 transition-colors font-medium"
             >
               About
@@ -116,7 +115,7 @@ export const Navigation: React.FC = () => {
               Home
             </a>
             <a
-              href="#about"
+              href="#promise"
               onClick={closeMobileMenu}
               className="block py-2 text-slate-700 hover:text-slate-900 transition-colors font-medium"
             >

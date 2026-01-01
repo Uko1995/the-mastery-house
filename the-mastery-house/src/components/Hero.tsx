@@ -3,7 +3,7 @@ import { Button } from "./Button";
 
 export const Hero: React.FC = () => {
   return (
-    <div className="relative min-h-screen flex items-center justify-center bg-linear-to-br from-white via-[#EFE6D8] to-white px-4 sm:px-6 lg:px-8">
+    <div className="relative min-h-screen flex items-center justify-center bg-linear-to-b  to-[#b59a5b]  from-[#f8f4ef] from-20% px-4 sm:px-6 lg:px-8">
       <div className="max-w-4xl mx-auto w-full text-center pt-20 pb-10 sm:pt-24 lg:pt-20">
         <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-serif font-bold text-[#1f3d2b] mb-4 sm:mb-6 leading-tight px-2">
           THE MASTERY HOUSE
