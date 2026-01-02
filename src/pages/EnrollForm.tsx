@@ -208,17 +208,14 @@ export const EnrollForm: React.FC = () => {
 
     // Mark all fields as touched
     const allTouched = requiredFields.reduce(
-      (acc, field) => ({
-        ...acc,
-        [field]: true,
-      }),
+      (acc, field) => ({ ...acc, [field]: true }),
       {}
     );
     setTouched(allTouched);
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
-      // Scroll to first error
+
       const firstErrorField = Object.keys(newErrors)[0];
       const element = document.getElementsByName(firstErrorField)[0];
       if (element) {
@@ -240,6 +237,13 @@ export const EnrollForm: React.FC = () => {
         },
         body: JSON.stringify(formData),
       });
+
+      const contentType = response.headers.get("content-type");
+
+      // 🚨 Guard against HTML / non-JSON responses (Vercel rewrite errors)
+      if (!contentType || !contentType.includes("application/json")) {
+        throw new Error("Server returned an invalid response");
+      }
 
       const data = await response.json();
 
@@ -267,7 +271,7 @@ export const EnrollForm: React.FC = () => {
         schoolingStructure: "",
         ageBand: "",
         promptInterest: "",
-        formationAreas: [] as string[],
+        formationAreas: [],
         childTemperament: "",
         childAt25: "",
         parentInvolvement: "",
@@ -276,13 +280,13 @@ export const EnrollForm: React.FC = () => {
         investmentReady: "",
         additionalInfo: "",
       });
+
       setErrors({});
       setTouched({});
-
-      // Scroll to top
       window.scrollTo({ top: 0, behavior: "smooth" });
     } catch (error) {
       console.error("Form submission error:", error);
+
       toast.error(
         error instanceof Error
           ? error.message

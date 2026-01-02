@@ -109,49 +109,6 @@ export const WaitingList: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Validate all required fields
-    const newErrors: Record<string, string> = {};
-    const requiredFields = [
-      "firstName",
-      "lastName",
-      "email",
-      "phone",
-      "childName",
-      "childAge",
-      "ageBand",
-    ];
-
-    requiredFields.forEach((field) => {
-      const value = formData[field as keyof typeof formData];
-      const error = validateField(field, value);
-      if (error) {
-        newErrors[field] = error;
-      }
-    });
-
-    // Mark all required fields as touched
-    const allTouched = requiredFields.reduce(
-      (acc, field) => ({
-        ...acc,
-        [field]: true,
-      }),
-      {}
-    );
-    setTouched(allTouched);
-
-    if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors);
-      // Scroll to first error
-      const firstErrorField = Object.keys(newErrors)[0];
-      const element = document.getElementsByName(firstErrorField)[0];
-      if (element) {
-        element.scrollIntoView({ behavior: "smooth", block: "center" });
-        element.focus();
-      }
-      return;
-    }
-
-    // Submit to API
     setIsSubmitting(true);
     const toastId = toast.loading("Joining waiting list...");
 
@@ -164,18 +121,27 @@ export const WaitingList: React.FC = () => {
         body: JSON.stringify(formData),
       });
 
-      const data = await response.json();
+      const contentType = response.headers.get("content-type");
+
+      // Always read body ONCE
+      const responseBody = contentType?.includes("application/json")
+        ? await response.json()
+        : await response.text();
 
       if (!response.ok) {
-        throw new Error(data.error || "Failed to submit form");
+        const errorMessage =
+          typeof responseBody === "string"
+            ? "Server returned an invalid response"
+            : responseBody?.error || "Submission failed";
+
+        throw new Error(errorMessage);
       }
 
       toast.success(
-        "Thank you for joining our waiting list. You will receive priority consideration for the next intake.",
-        { id: toastId, duration: 4000 }
+        "Thank you for joining our waiting list. You’ll receive priority consideration.",
+        { id: toastId }
       );
 
-      // Reset form
       setFormData({
         firstName: "",
         lastName: "",
@@ -186,19 +152,12 @@ export const WaitingList: React.FC = () => {
         ageBand: "",
         message: "",
       });
-      setErrors({});
-      setTouched({});
+    } catch (err) {
+      console.error("Submit error:", err);
 
-      // Scroll to top
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    } catch (error) {
-      console.error("Form submission error:", error);
-      toast.error(
-        error instanceof Error
-          ? error.message
-          : "Failed to submit form. Please try again.",
-        { id: toastId, duration: 5000 }
-      );
+      toast.error(err instanceof Error ? err.message : "Something went wrong", {
+        id: toastId,
+      });
     } finally {
       setIsSubmitting(false);
     }
