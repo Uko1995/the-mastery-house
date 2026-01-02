@@ -9,6 +9,7 @@ interface ButtonProps {
   href?: string;
   className?: string;
   type?: "button" | "submit" | "reset";
+  disabled?: boolean;
 }
 
 export const Button: React.FC<ButtonProps> = ({
@@ -19,6 +20,7 @@ export const Button: React.FC<ButtonProps> = ({
   href,
   className = "",
   type = "button",
+  disabled = false,
 }) => {
   const baseClasses =
     "inline-block font-medium transition-all duration-300 text-center";
@@ -38,16 +40,18 @@ export const Button: React.FC<ButtonProps> = ({
     lg: "px-8 py-4 text-lg",
   };
 
-  const classes = `${baseClasses} ${variantClasses[variant]} ${sizeClasses[size]} ${className}`;
+  const classes = `${baseClasses} ${variantClasses[variant]} ${
+    sizeClasses[size]
+  } ${className} ${disabled ? "opacity-50 cursor-not-allowed" : ""}`;
 
   const MotionComponent = href ? motion.a : motion.button;
-  const props = href ? { href } : { type, onClick };
+  const props = href ? { href } : { type, onClick, disabled };
 
   return (
     <MotionComponent
       className={classes}
-      whileHover={{ scale: 1.05 }}
-      whileTap={{ scale: 0.95 }}
+      whileHover={disabled ? {} : { scale: 1.05 }}
+      whileTap={disabled ? {} : { scale: 0.95 }}
       transition={{ type: "spring", stiffness: 400, damping: 17 }}
       {...props}
     >

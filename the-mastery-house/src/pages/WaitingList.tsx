@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import { Button } from "../components/Button";
 import { isValidPhoneNumber } from "libphonenumber-js";
+import toast, { Toaster } from "react-hot-toast";
 
 export const WaitingList: React.FC = () => {
   const [formData, setFormData] = useState({
-    parentName: "",
+    firstName: "",
+    lastName: "",
     email: "",
     phone: "",
     childName: "",
@@ -15,10 +17,12 @@ export const WaitingList: React.FC = () => {
 
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [touched, setTouched] = useState<Record<string, boolean>>({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const validateField = (name: string, value: string): string => {
     switch (name) {
-      case "parentName":
+      case "firstName":
+      case "lastName":
       case "childName":
         if (!value || value.trim().length < 2) {
           return "Name must be at least 2 characters";
@@ -102,13 +106,14 @@ export const WaitingList: React.FC = () => {
     setErrors((prev) => ({ ...prev, [name]: error }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     // Validate all required fields
     const newErrors: Record<string, string> = {};
     const requiredFields = [
-      "parentName",
+      "firstName",
+      "lastName",
       "email",
       "phone",
       "childName",
@@ -146,14 +151,86 @@ export const WaitingList: React.FC = () => {
       return;
     }
 
-    console.log("Waiting list submission:", formData);
-    alert(
-      "Thank you for joining our waiting list. You will receive priority consideration for the next intake."
-    );
+    // Submit to API
+    setIsSubmitting(true);
+    const toastId = toast.loading("Joining waiting list...");
+
+    try {
+      const response = await fetch("/api/waiting-list", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || "Failed to submit form");
+      }
+
+      toast.success(
+        "Thank you for joining our waiting list. You will receive priority consideration for the next intake.",
+        { id: toastId, duration: 4000 }
+      );
+
+      // Reset form
+      setFormData({
+        firstName: "",
+        lastName: "",
+        email: "",
+        phone: "",
+        childName: "",
+        childAge: "",
+        ageBand: "",
+        message: "",
+      });
+      setErrors({});
+      setTouched({});
+
+      // Scroll to top
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    } catch (error) {
+      console.error("Form submission error:", error);
+      toast.error(
+        error instanceof Error
+          ? error.message
+          : "Failed to submit form. Please try again.",
+        { id: toastId, duration: 5000 }
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
     <div className=" min-h-screen bg-linear-to-br from-slate-50 to-amber-50 flex items-center justify-center py-12 sm:py-16 md:py-20">
+      <Toaster
+        position="top-center"
+        toastOptions={{
+          success: {
+            duration: 6000,
+            style: {
+              background: "#10b981",
+              color: "#fff",
+            },
+          },
+          error: {
+            duration: 5000,
+            style: {
+              background: "#ef4444",
+              color: "#fff",
+            },
+          },
+          loading: {
+            style: {
+              background: "#3b82f6",
+              color: "#fff",
+            },
+          },
+        }}
+      />
       <div className="max-w-5xl mx-auto px-4 sm:px-6">
         <div className="bg-white rounded-lg shadow-lg p-6 sm:p-8 md:p-12">
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-serif font-bold text-[#1f3d2b] mb-4 sm:mb-6 text-center">
@@ -193,25 +270,50 @@ export const WaitingList: React.FC = () => {
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-6" noValidate>
-            <div>
-              <label className="block text-sm font-medium text-slate-700 mb-2">
-                Parent/Guardian Full Name *
-              </label>
-              <input
-                type="text"
-                name="parentName"
-                value={formData.parentName}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                className={`w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 ${
-                  errors.parentName && touched.parentName
-                    ? "border-red-500 focus:ring-red-600"
-                    : "border-slate-300 focus:ring-[#b59a5b]"
-                }`}
-              />
-              {errors.parentName && touched.parentName && (
-                <p className="mt-1 text-sm text-red-600">{errors.parentName}</p>
-              )}
+            <div className="grid md:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-slate-700 mb-2">
+                  First Name *
+                </label>
+                <input
+                  type="text"
+                  name="firstName"
+                  value={formData.firstName}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  className={`w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 ${
+                    errors.firstName && touched.firstName
+                      ? "border-red-500 focus:ring-red-600"
+                      : "border-slate-300 focus:ring-[#b59a5b]"
+                  }`}
+                />
+                {errors.firstName && touched.firstName && (
+                  <p className="mt-1 text-sm text-red-600">
+                    {errors.firstName}
+                  </p>
+                )}
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-slate-700 mb-2">
+                  Last Name *
+                </label>
+                <input
+                  type="text"
+                  name="lastName"
+                  value={formData.lastName}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  className={`w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 ${
+                    errors.lastName && touched.lastName
+                      ? "border-red-500 focus:ring-red-600"
+                      : "border-slate-300 focus:ring-[#b59a5b]"
+                  }`}
+                />
+                {errors.lastName && touched.lastName && (
+                  <p className="mt-1 text-sm text-red-600">{errors.lastName}</p>
+                )}
+              </div>
             </div>
 
             <div>
@@ -344,8 +446,13 @@ export const WaitingList: React.FC = () => {
               />
             </div>
 
-            <Button type="submit" size="lg" className="w-full">
-              Join the Waiting List
+            <Button
+              type="submit"
+              size="lg"
+              className="w-full"
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? "Submitting..." : "Join the Waiting List"}
             </Button>
           </form>
 

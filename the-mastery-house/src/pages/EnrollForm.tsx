@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import { Button } from "../components/Button";
 import { isValidPhoneNumber } from "libphonenumber-js";
+import toast, { Toaster } from "react-hot-toast";
 
 export const EnrollForm: React.FC = () => {
   const [formData, setFormData] = useState({
-    parentName: "",
+    firstName: "",
+    lastName: "",
     email: "",
     phone: "",
     country: "",
@@ -28,10 +30,12 @@ export const EnrollForm: React.FC = () => {
 
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [touched, setTouched] = useState<Record<string, boolean>>({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const validateField = (name: string, value: string | string[]): string => {
     switch (name) {
-      case "parentName":
+      case "firstName":
+      case "lastName":
       case "childName":
         if (!value || (typeof value === "string" && value.trim().length < 2)) {
           return "Name must be at least 2 characters";
@@ -167,13 +171,14 @@ export const EnrollForm: React.FC = () => {
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     // Validate all fields
     const newErrors: Record<string, string> = {};
     const requiredFields = [
-      "parentName",
+      "firstName",
+      "lastName",
       "email",
       "phone",
       "country",
@@ -223,15 +228,99 @@ export const EnrollForm: React.FC = () => {
       return;
     }
 
-    // Handle form submission
-    console.log("Form submitted:", formData);
-    alert(
-      "Thank you for your submission. We will review your intention form and be in touch soon."
-    );
+    // Submit to API
+    setIsSubmitting(true);
+    const toastId = toast.loading("Submitting your enrollment form...");
+
+    try {
+      const response = await fetch("/api/enroll", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || "Failed to submit form");
+      }
+
+      toast.success(
+        "Thank you for your submission. We will review your intention form and be in touch soon.",
+        { id: toastId, duration: 4000 }
+      );
+
+      // Reset form
+      setFormData({
+        firstName: "",
+        lastName: "",
+        email: "",
+        phone: "",
+        country: "",
+        timezone: "",
+        howHeard: "",
+        howHeardOther: "",
+        childName: "",
+        childAge: "",
+        schoolingStructure: "",
+        ageBand: "",
+        promptInterest: "",
+        formationAreas: [] as string[],
+        childTemperament: "",
+        childAt25: "",
+        parentInvolvement: "",
+        structuredEnvironment: "",
+        faithValues: "",
+        investmentReady: "",
+        additionalInfo: "",
+      });
+      setErrors({});
+      setTouched({});
+
+      // Scroll to top
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    } catch (error) {
+      console.error("Form submission error:", error);
+      toast.error(
+        error instanceof Error
+          ? error.message
+          : "Failed to submit form. Please try again.",
+        { id: toastId, duration: 5000 }
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
     <div className="min-h-screen bg-slate-50">
+      <Toaster
+        position="top-center"
+        toastOptions={{
+          success: {
+            duration: 6000,
+            style: {
+              background: "#10b981",
+              color: "#fff",
+            },
+          },
+          error: {
+            duration: 5000,
+            style: {
+              background: "#ef4444",
+              color: "#fff",
+            },
+          },
+          loading: {
+            style: {
+              background: "#3b82f6",
+              color: "#fff",
+            },
+          },
+        }}
+      />
       <div className="max-w-5xl mx-auto px-4 sm:px-6 py-12 sm:py-16 md:py-20">
         <div className="mb-8 sm:mb-12 text-center">
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-serif font-bold text-[#1f3d2b] mb-3 sm:mb-4 px-4">
@@ -269,27 +358,52 @@ export const EnrollForm: React.FC = () => {
             </h2>
 
             <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-slate-700 mb-2">
-                  Parent/Guardian Full Name *
-                </label>
-                <input
-                  type="text"
-                  name="parentName"
-                  value={formData.parentName}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  className={`w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 ${
-                    errors.parentName && touched.parentName
-                      ? "border-red-500 focus:ring-red-600"
-                      : "border-slate-300 focus:ring-[#b59a5b]"
-                  }`}
-                />
-                {errors.parentName && touched.parentName && (
-                  <p className="mt-1 text-sm text-red-600">
-                    {errors.parentName}
-                  </p>
-                )}
+              <div className="grid md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-2">
+                    First Name *
+                  </label>
+                  <input
+                    type="text"
+                    name="firstName"
+                    value={formData.firstName}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    className={`w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 ${
+                      errors.firstName && touched.firstName
+                        ? "border-red-500 focus:ring-red-600"
+                        : "border-slate-300 focus:ring-[#b59a5b]"
+                    }`}
+                  />
+                  {errors.firstName && touched.firstName && (
+                    <p className="mt-1 text-sm text-red-600">
+                      {errors.firstName}
+                    </p>
+                  )}
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-2">
+                    Last Name *
+                  </label>
+                  <input
+                    type="text"
+                    name="lastName"
+                    value={formData.lastName}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    className={`w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 ${
+                      errors.lastName && touched.lastName
+                        ? "border-red-500 focus:ring-red-600"
+                        : "border-slate-300 focus:ring-[#b59a5b]"
+                    }`}
+                  />
+                  {errors.lastName && touched.lastName && (
+                    <p className="mt-1 text-sm text-red-600">
+                      {errors.lastName}
+                    </p>
+                  )}
+                </div>
               </div>
 
               <div>
@@ -712,8 +826,13 @@ export const EnrollForm: React.FC = () => {
               reviewed personally. Families who are aligned will receive an
               invitation to a private virtual conversation with the Founder.
             </p>
-            <Button type="submit" size="lg" className="w-full">
-              Submit Intention Form
+            <Button
+              type="submit"
+              size="lg"
+              className="w-full"
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? "Submitting..." : "Submit Intention Form"}
             </Button>
           </div>
         </form>
