@@ -1,0 +1,18 @@
+{
+  "buildCommand": "cd the-mastery-house && npm run build",
+  "outputDirectory": "the-mastery-house/dist",
+  "installCommand": "cd the-mastery-house && npm install",
+  "devCommand": "cd the-mastery-house && npm run dev",
+  "framework": "vite",
+  "rewrites": [
+    {
+      "source": "/((?!api).*)",
+      "destination": "/index.html"
+    }
+  ],
+  "functions": {
+    "the-mastery-house/api/**/*.ts": {
+      "runtime": "@vercel/node@3.2.27"
+    }
+  }
+}
