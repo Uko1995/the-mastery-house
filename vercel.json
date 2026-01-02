@@ -12,5 +12,6 @@
     "api/**/*.ts": {
       "runtime": "@vercel/node@3.2.27"
     }
-  }
+  },
+  "bypassProtectionForPaths": ["/api/enroll", "/api/waiting-list"]
 }
