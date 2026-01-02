@@ -2,6 +2,11 @@
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
   "installCommand": "npm install",
+  "git": {
+    "deploymentEnabled": {
+      "main": true
+    }
+  },
   "rewrites": [
     {
       "source": "/api/(.*)",
@@ -13,7 +18,7 @@
     }
   ],
   "functions": {
-    "api/**/*.ts": {
+    "api/**/*.js": {
       "runtime": "@vercel/node@5.5.16"
     }
   }
