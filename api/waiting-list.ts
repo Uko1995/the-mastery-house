@@ -1,12 +1,12 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
-import { getDatabase } from "../lib/mongodb";
+import { getDatabase } from "../lib/mongodb.js";
 import {
   checkRateLimit,
   validateEmail,
   validatePhone,
   validateName,
   sanitizeString,
-} from "../lib/validation";
+} from "../lib/validation.js";
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   // Set CORS headers
