@@ -156,7 +156,7 @@ export const WaitingList: React.FC = () => {
     const toastId = toast.loading("Joining waiting list...");
 
     try {
-      const response = await fetch("http://localhost:3000/api/waiting-list", {
+      const response = await fetch("/api/waiting-list", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
