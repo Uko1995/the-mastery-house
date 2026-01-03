@@ -2,11 +2,8 @@
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
   "installCommand": "npm install",
-  "git": {
-    "deploymentEnabled": {
-      "main": true
-    }
-  },
+  "devCommand": "vite --port $PORT",
+  "framework": "vite",
   "rewrites": [
     {
       "source": "/api/(.*)",
@@ -18,7 +15,7 @@
     }
   ],
   "functions": {
-    "api/**/*.js": {
+    "api/**/*.ts": {
       "runtime": "@vercel/node@5.5.16"
     }
   }
