@@ -1,5 +1,4 @@
 import React from "react";
-import Logo from "../../public/TheMastery.png";
 
 export const Footer: React.FC = () => {
   return (
@@ -8,7 +7,7 @@ export const Footer: React.FC = () => {
         <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-6 sm:gap-8 mb-6 sm:mb-8">
           <div>
             <img
-              src={Logo}
+              src="/TheMastery.png"
               className="object-cover w-3/5 h-40 "
               alt="The Mastery House Logo"
             />
